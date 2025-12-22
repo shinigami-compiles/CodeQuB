@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% block title %}Input - CodeQuB{% endblock %}
+
+{% block content %}
+
+<div class="page-container page-container-input fade-in">
+
+    <div class="page-header">
+        <h2 class="page-title cyan-glow">Code Analysis Input</h2>
+        <p class="page-subtitle">
+            Choose how you want to provide metrics for a single code file/module —
+            manually via form or by uploading a single-row CSV.
+        </p>
+    </div>
+
+    <!-- Mode Toggle -->
+    <div class="mode-toggle">
+        <button class="mode-btn active" data-target="manual-mode">
+            Manual Input
+        </button>
+        <button class="mode-btn" data-target="csv-mode">
+            Single-Row CSV Upload
+        </button>
+    </div>
+
+    <!-- MANUAL INPUT MODE -->
+    <section id="manual-mode" class="mode-section active">
+        <div class="card card-cyber">
+            <h3 class="card-title">Manual Metrics Entry</h3>
+            <p class="card-subtitle">
+                Answer the following questions about your code file/module.
+                These metrics will be used by the ANN to estimate code quality and bug risk.
+            </p>
+
+            <form action="{{ url_for('predict_form') }}" method="POST" class="metrics-form">
+
+                <!-- Structural / Complexity -->
+                <div class="section-heading">Structural & Complexity Metrics</div>
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label for="loc">
+                            Lines of Code (loc)
+                            <span class="field-hint">Total number of lines in this file.</span>
+                        </label>
+                        <input type="number" id="loc" name="loc" min="1" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="num_functions">
+                            Number of Functions
+                            <span class="field-hint">How many functions are defined?</span>
+                        </label>
+                        <input type="number" id="num_functions" name="num_functions" min="1" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="avg_function_length">
+                            Average Function Length
+                            <span class="field-hint">Avg. lines per function (approx).</span>
+                        </label>
+                        <input type="number" id="avg_function_length" name="avg_function_length" min="1" step="0.1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="cyclomatic_complexity">
+                            Cyclomatic Complexity
+                            <span class="field-hint">Overall complexity score (1–30+).</span>
+                        </label>
+                        <input type="number" id="cyclomatic_complexity" name="cyclomatic_complexity" min="1" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="max_nesting_depth">
+                            Max Nesting Depth
+                            <span class="field-hint">Deepest nested if/loop depth.</span>
+                        </label>
+                        <input type="number" id="max_nesting_depth" name="max_nesting_depth" min="1" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="max_function_complexity">
+                            Max Function Complexity
+                            <span class="field-hint">Highest complexity of any single function.</span>
+                        </label>
+                        <input type="number" id="max_function_complexity" name="max_function_complexity" min="1" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="std_dev_function_complexity">
+                            Std Dev of Function Complexity
+                            <span class="field-hint">How varied are function complexities?</span>
+                        </label>
+                        <input type="number" id="std_dev_function_complexity" name="std_dev_function_complexity" min="0" step="0.1" required>
+                    </div>
+
+                </div>
+
+                <!-- Style / Readability -->
+                <div class="section-heading">Style & Readability</div>
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label for="lint_warning_count">
+                            Lint Warning Count
+                            <span class="field-hint">Number of lint/style issues.</span>
+                        </label>
+                        <input type="number" id="lint_warning_count" name="lint_warning_count" min="0" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="comment_to_code_ratio">
+                            Comment-to-Code Ratio
+                            <span class="field-hint">0.0–1.0 (e.g., 0.2 = 20% comments).</span>
+                        </label>
+                        <input type="number" id="comment_to_code_ratio" name="comment_to_code_ratio" min="0" max="1" step="0.01" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="review_comment_count">
+                            Review Comment Count
+                            <span class="field-hint">How many code review comments?</span>
+                        </label>
+                        <input type="number" id="review_comment_count" name="review_comment_count" min="0" step="1" required>
+                    </div>
+
+                </div>
+
+                <!-- Testing -->
+                <div class="section-heading">Testing & Coverage</div>
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label for="test_coverage_percent">
+                            Test Coverage (%)
+                            <span class="field-hint">0–100 (approximate).</span>
+                        </label>
+                        <input type="number" id="test_coverage_percent" name="test_coverage_percent" min="0" max="100" step="0.1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="num_test_files_linked">
+                            Number of Test Files Linked
+                            <span class="field-hint">How many test files cover this module?</span>
+                        </label>
+                        <input type="number" id="num_test_files_linked" name="num_test_files_linked" min="0" step="1" required>
+                    </div>
+
+                </div>
+
+                <!-- Stability / Ownership -->
+                <div class="section-heading">Stability & Ownership</div>
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label for="code_churn_recent">
+                            Recent Code Churn
+                            <span class="field-hint">Lines added/removed recently.</span>
+                        </label>
+                        <input type="number" id="code_churn_recent" name="code_churn_recent" min="0" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="num_contributors">
+                            Number of Contributors
+                            <span class="field-hint">How many people modified this file?</span>
+                        </label>
+                        <input type="number" id="num_contributors" name="num_contributors" min="1" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="file_age_days">
+                            File Age (days)
+                            <span class="field-hint">Days since this file was created.</span>
+                        </label>
+                        <input type="number" id="file_age_days" name="file_age_days" min="1" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="fan_in">
+                            Fan-in
+                            <span class="field-hint">How many modules depend on this file?</span>
+                        </label>
+                        <input type="number" id="fan_in" name="fan_in" min="0" step="1" required>
+                    </div>
+
+                </div>
+
+                <!-- Bug / Instability -->
+                <div class="section-heading">Bug & Instability Metrics</div>
+                <div class="form-grid">
+
+                    <div class="form-field">
+                        <label for="bug_count_total">
+                            Total Bug Count
+                            <span class="field-hint">Total defects linked to this file.</span>
+                        </label>
+                        <input type="number" id="bug_count_total" name="bug_count_total" min="0" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="bug_density">
+                            Bug Density
+                            <span class="field-hint">Bugs per 1K lines of code.</span>
+                        </label>
+                        <input type="number" id="bug_density" name="bug_density" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="bugs_last_30_days">
+                            Bugs in Last 30 Days
+                            <span class="field-hint">Recent defects reported.</span>
+                        </label>
+                        <input type="number" id="bugs_last_30_days" name="bugs_last_30_days" min="0" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="bug_trend">
+                            Bug Trend
+                            <span class="field-hint">-1 = decreasing, 0 = stable, 1 = increasing.</span>
+                        </label>
+                        <select id="bug_trend" name="bug_trend" required>
+                            <option value="-1">-1 (Decreasing)</option>
+                            <option value="0" selected>0 (Stable)</option>
+                            <option value="1">1 (Increasing)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="test_fail_count_related">
+                            Related Test Failures
+                            <span class="field-hint">Recent failing tests linked to this file.</span>
+                        </label>
+                        <input type="number" id="test_fail_count_related" name="test_fail_count_related" min="0" step="1" required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="days_since_last_change">
+                            Days Since Last Change
+                            <span class="field-hint">How long since last modification?</span>
+                        </label>
+                        <input type="number" id="days_since_last_change" name="days_since_last_change" min="0" step="1" required>
+                    </div>
+
+                </div>
+
+                <!-- Submit -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary-cyber">
+                         Analyze This Content
+                    </button>
+                    <a href="{{ url_for('index') }}" class="btn-secondary-ghost">
+                        ⬅ Back to Landing
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- CSV INPUT MODE -->
+    <section id="csv-mode" class="mode-section">
+        <div class="card card-cyber">
+            <h3 class="card-title">Single-Row CSV Upload</h3>
+            <p class="card-subtitle">
+                Upload a CSV that contains exactly <strong>one row</strong> of metrics for a single file/module.<br>
+                The header must match the feature names used by the system (see <a href="{{ url_for('about') }}">About</a> for structure).
+            </p>
+
+            <form action="{{ url_for('predict_csv_single') }}" method="POST" enctype="multipart/form-data" class="csv-form">
+
+                <div class="form-field">
+                    <label for="csv_file">
+                        CSV File
+                        <span class="field-hint">
+                            Must contain all required 22 feature columns and only one data row.
+                        </span>
+                    </label>
+                    <input type="file" id="csv_file" name="csv_file" accept=".csv" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary-cyber">
+                        📁 Upload & Analyze CSV
+                    </button>
+                    <a href="{{ url_for('about') }}" class="btn-secondary-ghost">
+                        📘 View CSV Template & Docs
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

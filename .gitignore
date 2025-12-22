@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+venv/
+.env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Reports / Outputs
+reports/
+outputs/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+codeqube/
+
+analysis_outputs/

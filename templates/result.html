@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Result - CodeQuB{% endblock %}
+
+{% block content %}
+
+<div class="page-container fade-in">
+
+    <div class="page-header">
+        <h2 class="page-title cyan-glow">Analysis Results</h2>
+        <p class="page-subtitle">Your code file's quality & bug risk predictions are ready.</p>
+    </div>
+
+    <!-- SUMMARY CARDS -->
+    <div class="result-summary">
+
+        <!-- Quality Score -->
+        <div class="result-card card-cyber">
+            <h3 class="result-title">Code Quality Score</h3>
+            <div class="score-display cyan-glow">
+                {{ prediction.code_quality_score | round(2) }}/100
+            </div>
+            <p class="result-desc">
+                Higher score indicates cleaner, more maintainable, and better-structured code.
+            </p>
+        </div>
+
+        <!-- Bug Risk -->
+        <div class="result-card card-cyber">
+            <h3 class="result-title">Bug Risk Level</h3>
+            <div class="score-display risk-display neon-danger">
+                Class {{ prediction.bug_risk_class }} –
+                {{ prediction.bug_risk_label }}
+            </div>
+            <p class="result-desc">
+                Classified into 0–5 where 5 indicates highly unstable or risky files.
+            </p>
+        </div>
+
+    </div>
+
+    <!-- PROBABILITY TABLE -->
+    <div class="card card-cyber mt-3">
+        <h3 class="card-title">Bug Risk Probability Distribution</h3>
+        <table class="prob-table">
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>Label</th>
+                    <th>Probability</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c, p in prediction.bug_risk_probabilities.items() %}
+                <tr>
+                    <td>{{ c }}</td>
+                    <td>{{ label_mapping[c|string] }}</td>
+                    <td>{{ (p * 100) | round(2) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- TOP FEATURE CONTRIBUTIONS -->
+    <div class="contrib-row">
+        <div class="card card-cyber contrib-card">
+            <h4 class="contrib-title">Top Factors Affecting Quality</h4>
+            <ul class="contrib-list">
+                {% for item in explanations.quality[:3] %}
+                <li>
+                    <code>{{ item.feature }}</code>
+                    <span class="contrib-score">{{ item.contribution | round(3) }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="card card-cyber contrib-card">
+            <h4 class="contrib-title">Top Factors Affecting Bug Risk</h4>
+            <ul class="contrib-list">
+                {% for item in explanations.risk[:3] %}
+                <li>
+                    <code>{{ item.feature }}</code>
+                    <span class="contrib-score">{{ item.contribution | round(3) }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="form-actions mt-4 centered-actions">
+
+        <!-- Breakdown page -->
+        <a href="{{ url_for('breakdown_page', analysis_id=analysis_id) }}"
+           class="btn-primary-cyber">
+            🔍 View Detailed Breakdown
+        </a>
+
+        <a href="{{ url_for('input_page') }}" class="btn-secondary-ghost">
+            ⬅ Analyze Another File
+        </a>
+
+        <a href="{{ url_for('index') }}" class="btn-secondary-ghost">
+            🏠 Back to Home
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

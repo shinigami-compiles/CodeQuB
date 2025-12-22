@@ -1,0 +1,149 @@
+{
+    "feature_columns": [
+        "loc",
+        "num_functions",
+        "avg_function_length",
+        "cyclomatic_complexity",
+        "max_nesting_depth",
+        "max_function_complexity",
+        "std_dev_function_complexity",
+        "lint_warning_count",
+        "comment_to_code_ratio",
+        "review_comment_count",
+        "test_coverage_percent",
+        "num_test_files_linked",
+        "code_churn_recent",
+        "num_contributors",
+        "file_age_days",
+        "fan_in",
+        "bug_count_total",
+        "bug_density",
+        "bugs_last_30_days",
+        "bug_trend",
+        "test_fail_count_related",
+        "days_since_last_change"
+    ],
+    "feature_descriptions": {
+        "loc": "Lines of code in the file/module.",
+        "num_functions": "Number of functions defined in the file.",
+        "avg_function_length": "Average lines of code per function.",
+        "cyclomatic_complexity": "Overall cyclomatic complexity of the file.",
+        "max_nesting_depth": "Maximum depth of nested control structures.",
+        "max_function_complexity": "Highest cyclomatic complexity of any single function.",
+        "std_dev_function_complexity": "Variation (standard deviation) in function complexities.",
+        "lint_warning_count": "Number of lint/style warnings reported for this file.",
+        "comment_to_code_ratio": "Ratio of comment lines to code lines.",
+        "review_comment_count": "Number of code review comments left on this file.",
+        "test_coverage_percent": "Percentage of this file's code covered by automated tests.",
+        "num_test_files_linked": "Number of test files linked to or covering this module.",
+        "code_churn_recent": "Recent lines added/removed (measure of code churn).",
+        "num_contributors": "Number of different contributors modifying this file.",
+        "file_age_days": "Age of the file in days since creation.",
+        "fan_in": "Number of other modules depending on this file.",
+        "bug_count_total": "Total number of historical bugs linked to this file.",
+        "bug_density": "Bug density (bugs per 1k lines of code).",
+        "bugs_last_30_days": "Number of bugs reported in the last 30 days.",
+        "bug_trend": "Recent bug trend (-1 decreasing, 0 stable, 1 increasing).",
+        "test_fail_count_related": "Number of test failures recently related to this file.",
+        "days_since_last_change": "Days since the file was last modified."
+    },
+    "feature_stats": {
+        "loc": {
+            "mean": 1544.8799333333334,
+            "std": 865.6076549553665
+        },
+        "num_functions": {
+            "mean": 40.89986666666667,
+            "std": 22.981258450794687
+        },
+        "avg_function_length": {
+            "mean": 31.327925974714134,
+            "std": 14.658464798687428
+        },
+        "cyclomatic_complexity": {
+            "mean": 13.7928,
+            "std": 8.941647955494558
+        },
+        "max_nesting_depth": {
+            "mean": 4.7122,
+            "std": 2.2812944775572777
+        },
+        "max_function_complexity": {
+            "mean": 21.9184,
+            "std": 14.425417663739701
+        },
+        "std_dev_function_complexity": {
+            "mean": 3.139821472316094,
+            "std": 1.8477172736793082
+        },
+        "lint_warning_count": {
+            "mean": 103.70273333333333,
+            "std": 59.59466502293268
+        },
+        "comment_to_code_ratio": {
+            "mean": 0.1956747762038848,
+            "std": 0.09438609331856275
+        },
+        "review_comment_count": {
+            "mean": 61.5752,
+            "std": 29.49859790385525
+        },
+        "test_coverage_percent": {
+            "mean": 65.06159699113378,
+            "std": 18.886562652889776
+        },
+        "num_test_files_linked": {
+            "mean": 4.884533333333334,
+            "std": 3.2675782238362543
+        },
+        "code_churn_recent": {
+            "mean": 206.43266666666668,
+            "std": 143.99107472185753
+        },
+        "num_contributors": {
+            "mean": 7.061,
+            "std": 4.342420100972882
+        },
+        "file_age_days": {
+            "mean": 2010.9570666666666,
+            "std": 1020.7219891936273
+        },
+        "fan_in": {
+            "mean": 21.558733333333333,
+            "std": 14.520110779956957
+        },
+        "bug_count_total": {
+            "mean": 33.908,
+            "std": 29.286516852185297
+        },
+        "bug_density": {
+            "mean": 0.9097262747940513,
+            "std": 0.7054751657716422
+        },
+        "bugs_last_30_days": {
+            "mean": 6.9706,
+            "std": 6.041346619201163
+        },
+        "bug_trend": {
+            "mean": -0.358,
+            "std": 0.7851768378312409
+        },
+        "test_fail_count_related": {
+            "mean": 11.001266666666666,
+            "std": 9.06735160133444
+        },
+        "days_since_last_change": {
+            "mean": 206.6708,
+            "std": 102.53544571200732
+        }
+    },
+    "num_bug_classes": 6,
+    "label_mapping": {
+        "0": "Very Low",
+        "1": "Low",
+        "2": "Slightly Risky",
+        "3": "Medium",
+        "4": "High",
+        "5": "Critical"
+    }
+}

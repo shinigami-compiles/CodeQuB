@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Landing - CodeQuB{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+      href="{{ url_for('static', filename='image/Icon.ico') }}">
+    <!-- Google Fonts (for techy/cyber feel) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Space+Grotesk:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+    <header class="app-header">
+        <div class="app-header-inner">
+            <div class="brand">
+                <!-- put a real image here (see snippet below) -->
+                <div class="brand-logo">
+                    <!-- if no image, the .brand-logo-mark text remains as fallback -->
+                    <img src="{{ url_for('static', filename='image/logo1.png') }}" alt="CodeQuB" class="brand-logo-mark">
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">CodeQuB</span>
+                    <span class="brand-subtitle">Less Bugs != Quality Code</span>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('about') }}" class="nav-link">About</a>
+            </nav>
+        </div>
+    </header>
+    <div class="landing-container fade-in">
+        <div class="page-bg-image-left"></div>
+        <div class="page-bg-image-right"></div>
+
+        <!-- Main Title -->
+        <h1 class="landing-title cyan-glow">
+            CodeQuB
+        </h1>
+        
+        <!-- Description -->
+        <p class="landing-description">
+            An intelligent ANN-powered engine that analyzes static & process metrics to 
+            predict <span class="highlight">Code Quality</span> and 
+            <span class="highlight">Bug Risk Levels</span>.  
+            Built for developers, researchers, and engineering teams.
+        </p>
+        
+        <!-- Start Button -->
+        <a href="{{ url_for('input_page') }}"
+        class="btn-primary-cyber start-btn"
+        id="startAnalysisBtn">
+        ▶ Start Code Analysis
+        </a>
+
+
+    </div>
+
+    <script src="{{url_for('static', filename = 'js/main.js')}}"></script>
+</body>
+</html>

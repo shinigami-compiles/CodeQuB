@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}About - CodeQuB{% endblock %}
+
+{% block content %}
+
+<div class="page-container fade-in">
+
+    <!-- Header -->
+    <div class="page-header">
+        <h2 class="page-title cyan-glow">About CodeQuB</h2>
+        <p class="page-subtitle">
+            Learn what this AI does, how it works under the hood, and how to prepare valid inputs
+            for code quality & bug risk analysis.
+        </p>
+    </div>
+
+    <!-- Section: What is CodePulse AI -->
+    <section class="card card-cyber">
+        <h3 class="section-heading">What is CodeQuB?</h3>
+        <p class="section-subtext">
+            <strong>CodeQuB</strong> is an ANN-powered engine that predicts 
+            <span class="highlight">Code Quality Score (0–100)</span> and 
+            <span class="highlight">Bug Risk Level (0–5)</span> for a single code file/module.
+            It uses a rich set of <strong>22 static & process metrics</strong> derived from:
+            code structure, complexity, testing, change history, and defect history.
+        </p>
+        <p class="section-subtext">
+            Instead of reading raw source code, the model consumes <em>numeric metrics</em> that describe
+            the file's behavior and history. These metrics allow the ANN to learn patterns such as:
+            <em>"high complexity + high churn + many recent bugs ⇒ higher bug risk"</em>, or
+            <em>"good coverage + low complexity ⇒ better quality."</em>
+        </p>
+    </section>
+
+    <!-- Section: How it Works -->
+    <section class="card card-cyber mt-3">
+        <h3 class="section-heading">How Does It Work?</h3>
+
+        <ol class="about-list">
+            <li>
+                <strong>Input Metrics Collection</strong>  
+                You provide 22 numeric metrics describing a code file/module, 
+                either via the manual form or using a properly structured CSV.
+            </li>
+            <li>
+                <strong>Preprocessing & Scaling</strong>  
+                The system normalizes these metrics using the same scaler that was fitted during training.
+            </li>
+            <li>
+                <strong>Multi-Task ANN Prediction</strong>  
+                A shared-trunk Artificial Neural Network predicts:
+                <ul>
+                    <li>Code Quality Score (regression head)</li>
+                    <li>Bug Risk Class (0–5, classification head)</li>
+                </ul>
+            </li>
+            <li>
+                <strong>Explainability</strong>  
+                A gradient-based explanation module estimates how each input metric
+                influenced the quality score and bug risk for this specific file.
+            </li>
+            <li>
+                <strong>Recommendations</strong>  
+                A rule-based recommendation engine translates these insights into practical suggestions
+                for improving code quality and reducing bug risk.
+            </li>
+            <li>
+                <strong>Breakdown</strong>  
+                You can view a detailed breakdown page that summarizes
+                metrics, predictions, explanations, and recommendations.
+            </li>
+        </ol>
+    </section>
+
+    <!-- Section: CSV Structure -->
+    <section class="card card-cyber mt-3">
+        <h3 class="section-heading">CSV Structure for Single-Row Upload</h3>
+        <p class="section-subtext">
+            When using the <strong>CSV upload</strong> option on the input page, your file must:
+        </p>
+        <ul class="about-list">
+            <li>Contain <strong>exactly one data row</strong> (one file/module per CSV).</li>
+            <li>Include a <strong>header row</strong> with all required feature names.</li>
+            <li>Use numeric values for all features (integers or floats as appropriate).</li>
+        </ul>
+
+        <p class="section-subtext">
+            A minimal valid CSV (header + one row) looks like:
+        </p>
+
+        <pre class="code-block">
+loc,num_functions,avg_function_length,cyclomatic_complexity,max_nesting_depth,max_function_complexity,std_dev_function_complexity,lint_warning_count,comment_to_code_ratio,review_comment_count,test_coverage_percent,num_test_files_linked,code_churn_recent,num_contributors,file_age_days,fan_in,bug_count_total,bug_density,bugs_last_30_days,bug_trend,test_fail_count_related,days_since_last_change
+800,25,32.0,12,4,25,4.0,30,0.25,18,75.0,3,120,5,500,12,8,1.2,2,0,3,30
+        </pre>
+
+        <div class="form-actions mt-3">
+            <!-- Route should return/send a template CSV file -->
+            <a href="{{ url_for('download_template_csv') }}" class="btn-primary-cyber">
+                ⬇ Download Template CSV
+            </a>
+        </div>
+    </section>
+
+    <!-- Section: Input Features List -->
+    <section class="card card-cyber mt-3">
+        <h3 class="section-heading">Input Features Required</h3>
+        <p class="section-subtext">
+            These are the 22 features the model expects. They must be provided either via the manual form
+            or as CSV columns with the <strong>exact same names</strong>.
+        </p>
+
+        <div class="features-columns">
+            <!-- Column 1 -->
+            <div class="features-col">
+                <h4 class="features-heading">Structural & Complexity</h4>
+                <ul class="feature-list">
+                    <li><code>loc</code> – Lines of code in the file.</li>
+                    <li><code>num_functions</code> – Number of functions defined.</li>
+                    <li><code>avg_function_length</code> – Average lines per function.</li>
+                    <li><code>cyclomatic_complexity</code> – Overall file complexity.</li>
+                    <li><code>max_nesting_depth</code> – Deepest conditional/loop nesting.</li>
+                    <li><code>max_function_complexity</code> – Highest function complexity.</li>
+                    <li><code>std_dev_function_complexity</code> – Variation in function complexities.</li>
+                </ul>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="features-col">
+                <h4 class="features-heading">Style, Documentation & Testing</h4>
+                <ul class="feature-list">
+                    <li><code>lint_warning_count</code> – Number of lint/style warnings.</li>
+                    <li><code>comment_to_code_ratio</code> – Ratio of comments to code.</li>
+                    <li><code>review_comment_count</code> – Code review comments count.</li>
+                    <li><code>test_coverage_percent</code> – Test coverage for this file (%).</li>
+                    <li><code>num_test_files_linked</code> – Test files covering this module.</li>
+                </ul>
+
+                <h4 class="features-heading mt-2">Stability & Ownership</h4>
+                <ul class="feature-list">
+                    <li><code>code_churn_recent</code> – Recent lines added/removed.</li>
+                    <li><code>num_contributors</code> – Number of contributors.</li>
+                    <li><code>file_age_days</code> – Age of file in days.</li>
+                    <li><code>fan_in</code> – Other modules depending on this file.</li>
+                </ul>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="features-col">
+                <h4 class="features-heading">Bug & Instability Metrics</h4>
+                <ul class="feature-list">
+                    <li><code>bug_count_total</code> – Total historical bugs linked.</li>
+                    <li><code>bug_density</code> – Bugs per 1K lines of code.</li>
+                    <li><code>bugs_last_30_days</code> – Recent bugs (last 30 days).</li>
+                    <li><code>bug_trend</code> – Trend of bugs (-1, 0, +1).</li>
+                    <li><code>test_fail_count_related</code> – Related test failures recently.</li>
+                    <li><code>days_since_last_change</code> – Recency of last modification.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

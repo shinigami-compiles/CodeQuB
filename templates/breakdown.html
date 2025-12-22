@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% block title %}Breakdown - CodeQuB{% endblock %}
+
+{% block content %}
+
+<div class="page-container fade-in">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h2 class="page-title cyan-glow">Detailed Analysis Breakdown</h2>
+        <p class="page-subtitle">
+            A full explanation of how CodePulse AI evaluated this code file's quality and bug risk.
+        </p>
+    </div>
+
+    <!-- SUMMARY STRIP -->
+    <section class="summary-strip card-cyber">
+        <div class="summary-item">
+            <h4>Code Quality Score</h4>
+            <div class="summary-score cyan-glow">
+                {{ prediction.code_quality_score | round(2) }}/100
+            </div>
+            <p class="summary-text">
+                Higher scores indicate cleaner, more maintainable, and well-tested code.
+            </p>
+        </div>
+        <div class="summary-item">
+            <h4>Bug Risk Level</h4>
+            <div class="summary-score neon-danger">
+                Class {{ prediction.bug_risk_class }} – {{ prediction.bug_risk_label }}
+            </div>
+            <p class="summary-text">
+                Classes range from 0 (Very Low) to 5 (Critical) based on modeled defect likelihood.
+            </p>
+        </div>
+    </section>
+
+    <!-- FEATURE IMPACT SECTION -->
+    <section class="mt-3">
+        <h3 class="section-heading cyan-glow">Feature Impact Breakdown</h3>
+        <p class="section-subtext">
+            These tables show how individual metrics increased or decreased the predicted code quality and bug risk.
+        </p>
+
+        <div class="contrib-row">
+
+            <!-- QUALITY IMPACT -->
+            <div class="card card-cyber contrib-card-wide">
+                <h4 class="contrib-title">Impact on Code Quality</h4>
+                <p class="section-subtext small">
+                    Positive contribution &rarr; pushes quality score up.  
+                    Negative contribution &rarr; pulls quality score down.
+                </p>
+                <table class="contrib-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Value</th>
+                            <th>Contribution</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in explanations.quality %}
+                        <tr>
+                            <td><code>{{ item.feature }}</code></td>
+                            <td>{{ item.value | round(3) }}</td>
+                            <td>{{ item.contribution | round(4) }}</td>
+                            <td>
+                                {% if item.contribution > 0 %}
+                                    <span class="tag tag-positive">↑ Improves Quality</span>
+                                {% elif item.contribution < 0 %}
+                                    <span class="tag tag-negative">↓ Reduces Quality</span>
+                                {% else %}
+                                    <span class="tag tag-neutral">Neutral</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- RISK IMPACT -->
+            <div class="card card-cyber contrib-card-wide">
+                <h4 class="contrib-title">Impact on Bug Risk</h4>
+                <p class="section-subtext small">
+                    Positive contribution &rarr; increases predicted bug risk for the current class.  
+                    Negative contribution &rarr; reduces predicted bug risk.
+                </p>
+                <table class="contrib-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Value</th>
+                            <th>Contribution</th>
+                            <th>Effect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in explanations.risk %}
+                        <tr>
+                            <td><code>{{ item.feature }}</code></td>
+                            <td>{{ item.value | round(3) }}</td>
+                            <td>{{ item.contribution | round(4) }}</td>
+                            <td>
+                                {% if item.contribution > 0 %}
+                                    <span class="tag tag-negative">↑ Increases Risk</span>
+                                {% elif item.contribution < 0 %}
+                                    <span class="tag tag-positive">↓ Reduces Risk</span>
+                                {% else %}
+                                    <span class="tag tag-neutral">Neutral</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- RECOMMENDATIONS -->
+    <section class="mt-3">
+        <h3 class="section-heading cyan-glow">Improvement Recommendations</h3>
+        <p class="section-subtext">
+            These suggestions combine model insights and heuristic rules to guide you on what to improve.
+        </p>
+
+        <div class="row rec-row">
+            <!-- Quality Recommendations -->
+            <div class="col rec-col">
+                <div class="card card-cyber">
+                    <h4 class="rec-title">Code Quality Recommendations</h4>
+                    {% if recommendations.quality and recommendations.quality|length > 0 %}
+                        <ul class="rec-list">
+                            {% for rec in recommendations.quality %}
+                            <li>{{ rec }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted small">No specific quality recommendations were generated.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Risk Recommendations -->
+            <div class="col rec-col">
+                <div class="card card-cyber">
+                    <h4 class="rec-title">Bug Risk Recommendations</h4>
+                    {% if recommendations.risk and recommendations.risk|length > 0 %}
+                        <ul class="rec-list">
+                            {% for rec in recommendations.risk %}
+                            <li>{{ rec }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-muted small">No specific risk recommendations were generated.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RAW FEATURES TABLE -->
+    <section class="mt-3">
+        <h3 class="section-heading cyan-glow">Input Metrics Used</h3>
+        <p class="section-subtext">
+            This is the complete set of static & process metrics that were fed into the ANN model for this analysis.
+        </p>
+
+        <div class="card card-cyber">
+            <table class="feature-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Value</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for name, value in features.items() %}
+                    <tr>
+                        <td><code>{{ name }}</code></td>
+                        <td>{{ value }}</td>
+                        <td>{{ feature_descriptions.get(name, "") }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- ACTIONS -->
+    <section class="mt-4">
+        <div class="form-actions centered-actions">
+            <!-- Optional: this can be wired with JS or a POST form to /api/report -->
+            
+
+
+            <a href="{{ url_for('result_page', analysis_id=analysis_id) }}" class="btn-secondary-ghost">
+                ⬅ Back to Result
+            </a>
+
+            <a href="{{ url_for('input_page') }}" class="btn-secondary-ghost">
+                🔁 Analyze Another File
+            </a>
+        </div>
+    </section>
+
+</div>
+
+{% endblock %}

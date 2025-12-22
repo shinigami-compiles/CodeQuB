@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}CodeQuB{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+      href="{{ url_for('static', filename='image/Icon.ico') }}">
+    <!-- Google Fonts (for techy/cyber feel) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Space+Grotesk:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="app-body">
+    <!-- Glowing background grid / accents (purely visual) -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-left"></div>
+    <div class="bg-glow bg-glow-right"></div>
+    <div class="bg-fade-overlay"></div>
+
+    <!-- Top Navigation Bar -->
+    <header class="app-header">
+        <div class="app-header-inner">
+            <!-- Left: Logo + System Name -->
+            <div class="brand">
+                <div class="brand-logo">
+                    <!-- Simple neon cube / bracket logo using CSS -->
+                    <img src="{{ url_for('static', filename='image/logo1.png') }}" alt="CodeQuB" class="brand-logo-mark">
+                </div>
+                <div class="brand-text">
+                    <span class="brand-title">CodeQuB</span>
+                    <span class="brand-subtitle">Less the Bug, More the Quality</span>
+                </div>
+            </div>
+
+            <!-- Right: Navigation -->
+            <nav class="nav-links">
+                <a href="{{ url_for('index') }}" class="nav-link">Home</a>
+                <a href="{{ url_for('about') }}" class="nav-link">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Wrapper -->
+    <main class="app-main">
+        <div class="app-main-inner">
+            {% block content %}
+            <!-- Page-specific content goes here -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <span class="footer-text">
+            © {{ current_year or 2025 }} CodeQuB · Version@3
+        </span>
+    </footer>
+
+    <!-- External JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+
+    <!-- START-ANALYSIS overlay (landing Start button) -->
+    <div id="overlay-start" class="overlay hidden" aria-hidden="true">
+      <div class="overlay-backdrop" data-overlay="start"></div>
+      <div class="overlay-content">
+        <video id="overlay-start-video"
+               class="overlay-video"
+               autoplay
+               muted
+               loop
+               playsinline>
+            <source src="{{ url_for('static', filename='videos/load1.webm') }}" type="video/mp4">
+            <img src="{{ url_for('static', filename='img/start_loader.gif') }}" alt="Loading">
+        </video>
+        <div class="overlay-caption">Preparing code analysis…</div>
+      </div>
+    </div>
+
+    <!-- ANALYZE-FILE overlay (Analyze This File button) -->
+    <div id="overlay-analyze" class="overlay hidden" aria-hidden="true">
+      <div class="overlay-backdrop" data-overlay="analyze"></div>
+      <div class="overlay-content">
+        <video id="overlay-analyze-video" class="overlay-video" playsinline autoplay muted loop>
+          <source src="{{ url_for('static', filename='videos/load1.webm') }}" type="video/mp4">
+          <img src="{{ url_for('static', filename='img/analyze_loader.gif') }}" alt="Loading">
+        </video>
+        <div class="overlay-caption">Analyzing file — this may take a few seconds</div>
+      </div>
+    </div>
+
+</body>
+</html>
